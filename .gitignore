@@ -10,6 +10,8 @@
 ###> Sensitive configuration files ###
 /.env
 /.env.local
+/.env.dev
+/.env.test
 /.env.local.php
 /.env.*.local
 /config/secrets/
@@ -18,7 +20,7 @@
 ###> Test-related and PHPUnit files ###
 /phpunit.xml
 /phpunit.xml.dist
-/phpunit.result.cache
+/.phpunit.result.cache
 
 ###> PHPStorm-specific files ###
 /.idea/
