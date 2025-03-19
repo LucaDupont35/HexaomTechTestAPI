@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Entity\Contact;
 use App\Repository\ContactRepository;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;

@@ -1,25 +1,30 @@
+###> Generated folders and files ###
+/var/
+/vendor/
+/node_modules/
+/public/bundles/
+/public/assets/
+/assets/vendor/
+/composer.lock
 
-###> symfony/framework-bundle ###
+###> Sensitive configuration files ###
+/.env
 /.env.local
 /.env.local.php
 /.env.*.local
+/config/secrets/
 /config/secrets/prod/prod.decrypt.private.php
-/public/bundles/
-/var/
-/vendor/
-###< symfony/framework-bundle ###
 
-###> phpunit/phpunit ###
+###> Test-related and PHPUnit files ###
 /phpunit.xml
-.phpunit.result.cache
-###< phpunit/phpunit ###
+/phpunit.xml.dist
+/phpunit.result.cache
 
-###> symfony/phpunit-bridge ###
-.phpunit.result.cache
-/phpunit.xml
-###< symfony/phpunit-bridge ###
+###> PHPStorm-specific files ###
+/.idea/
+/*.iml
 
-###> symfony/asset-mapper ###
-/public/assets/
-/assets/vendor/
-###< symfony/asset-mapper ###
+###> Cache and logs ###
+/var/cache/
+/var/logs/
+/var/sessions/

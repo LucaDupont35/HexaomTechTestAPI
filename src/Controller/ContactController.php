@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Contact;
 use App\Service\ContactService;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,13 +18,10 @@ class ContactController extends AbstractController
     private ContactService $contactService;
     private SerializerInterface $serializer;
 
-    private LoggerInterface $logger;
-
-    public function __construct(ContactService $contactService, SerializerInterface $serializer, LoggerInterface $logger)
+    public function __construct(ContactService $contactService, SerializerInterface $serializer)
     {
         $this->contactService = $contactService;
         $this->serializer = $serializer;
-        $this->logger = $logger;
     }
 
     #[Route('', name: 'contact.create', methods: ['POST'])]
@@ -37,10 +33,7 @@ class ContactController extends AbstractController
     #[Route('/{id}', name: 'contact.update', methods: ['PUT'])]
     public function update(int $id, #[MapRequestPayload(serializationContext:['groups' => ['update']])] Contact $newContact): JsonResponse
     {
-        $this->logger->info('Nouveau contact : ' . $newContact->getFirstName());
-
         $contact = $this->contactService->getById($id);
-        $this->logger->info('Contact existant : ' . $contact->getFirstName());
 
         if (!$contact) {
             return new JsonResponse(['error' => 'Contact not found'], Response::HTTP_NOT_FOUND);
@@ -54,9 +47,6 @@ class ContactController extends AbstractController
             null,
             [AbstractNormalizer::OBJECT_TO_POPULATE => $contact]
         );
-
-        $this->logger->info('Contact mis à jour : ' . $contact->getFirstName());
-
         return $this->contactService->save($contact);
     }
 

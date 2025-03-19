@@ -5,11 +5,12 @@ namespace App\Entity;
 use App\Repository\ContactRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Stringable;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ContactRepository::class)]
-class Contact implements \Stringable
+class Contact implements Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -18,13 +19,13 @@ class Contact implements \Stringable
     private ?int $id = null;
 
     #[ORM\Column(length: 30)]
-    #[Assert\Length(min: 3, max: 30, minMessage: 'Your first name must be at least 3 characters long', maxMessage: 'Your first name cannot be longer than 30 characters')]
+    #[Assert\Length(min: 3, max: 30, minMessage: 'Your first name must be at least 3 characters long.', maxMessage: 'Your first name cannot be longer than 30 characters.')]
     #[Assert\NotBlank(message: 'The phone number is required')]
     #[Groups(['read', 'create', 'update'])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 30)]
-    #[Assert\Length(min: 3, max: 30, minMessage: 'Your last name must be at least 3 characters long', maxMessage: 'Your last name cannot be longer than 30 characters')]
+    #[Assert\Length(min: 3, max: 30, minMessage: 'Your last name must be at least 3 characters long.', maxMessage: 'Your last name cannot be longer than 30 characters.')]
     #[Assert\NotBlank(message: 'The phone number is required')]
     #[Groups(['read', 'create', 'update'])]
     private ?string $lastName = null;
@@ -32,15 +33,15 @@ class Contact implements \Stringable
     #[ORM\Column(length: 10)]
     #[Assert\Regex(
         pattern: '/^0[1-9]([-. \/]?\d{2}){4}$/',
-        message: 'The phone number is not valid',
+        message: 'The phone number is not valid.',
         match: true)]
-    #[Assert\NotBlank(message: 'The phone number is required')]
+    #[Assert\NotBlank(message: 'The phone number is required.')]
     #[Groups(['read', 'create', 'update'])]
     private ?string $phoneNumber = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\Email]
-    #[Assert\NotBlank(message: 'The phone number is required')]
+    #[Assert\Email(message: 'The email is not valid.')]
+    #[Assert\NotBlank(message: 'The phone number is required.')]
     #[Groups(['read', 'create', 'update'])]
     private ?string $email = null;
 
