@@ -9,7 +9,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ContactRepository::class)]
-class Contact
+class Contact implements \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -159,5 +159,18 @@ class Contact
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return sprintf(
+            '%s %s (%s) - %s, %s [%s]',
+            $this->firstName,
+            $this->lastName,
+            $this->phoneNumber,
+            $this->email,
+            $this->city ?? 'No city',
+            $this->postalCode ?? 'No postal code'
+        );
     }
 }

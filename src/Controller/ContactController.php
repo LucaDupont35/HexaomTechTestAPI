@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Contact;
 use App\Service\ContactService;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,10 +19,13 @@ class ContactController extends AbstractController
     private ContactService $contactService;
     private SerializerInterface $serializer;
 
-    public function __construct(ContactService $contactService, SerializerInterface $serializer)
+    private LoggerInterface $logger;
+
+    public function __construct(ContactService $contactService, SerializerInterface $serializer, LoggerInterface $logger)
     {
         $this->contactService = $contactService;
         $this->serializer = $serializer;
+        $this->logger = $logger;
     }
 
     #[Route('', name: 'contact.create', methods: ['POST'])]
@@ -33,41 +37,27 @@ class ContactController extends AbstractController
     #[Route('/{id}', name: 'contact.update', methods: ['PUT'])]
     public function update(int $id, #[MapRequestPayload(serializationContext:['groups' => ['update']])] Contact $newContact): JsonResponse
     {
+        $this->logger->info('Nouveau contact : ' . $newContact->getFirstName());
+
         $contact = $this->contactService->getById($id);
+        $this->logger->info('Contact existant : ' . $contact->getFirstName());
+
         if (!$contact) {
             return new JsonResponse(['error' => 'Contact not found'], Response::HTTP_NOT_FOUND);
         }
 
-        $this->serializer->deserialize(
-            json_encode($newContact),
+        $newContactData = $this->serializer->normalize($newContact, null, ['groups' => ['update']]);
+
+        $this->serializer->denormalize(
+            $newContactData,
             Contact::class,
-            'json',
-            [AbstractNormalizer::OBJECT_TO_POPULATE => $contact, 'groups' => ['contact.update']]
+            null,
+            [AbstractNormalizer::OBJECT_TO_POPULATE => $contact]
         );
 
+        $this->logger->info('Contact mis à jour : ' . $contact->getFirstName());
+
         return $this->contactService->save($contact);
-    }
-
-    #[Route('/{id}', name: 'contact.delete', methods: ['DELETE'])]
-    public function delete(int $id): JsonResponse
-    {
-        $contact = $this->contactService->getById($id);
-        if (!$contact) {
-            return new JsonResponse(['error' => 'Contact not found'], Response::HTTP_NOT_FOUND);
-        }
-
-        return $this->contactService->delete($contact);
-    }
-
-    #[Route('/{id}', name: 'contact.show', methods: ['GET'])]
-    public function getContact(int $id): JsonResponse
-    {
-        $contact = $this->contactService->getById($id);
-        if (!$contact) {
-            return new JsonResponse(['error' => 'Contact not found'], Response::HTTP_NOT_FOUND);
-        }
-
-        return $this->json($contact, Response::HTTP_OK);
     }
 
     #[Route('', name: 'contact.list', methods: ['GET'])]

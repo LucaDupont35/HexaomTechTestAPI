@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Contact;
 use App\Repository\ContactRepository;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,12 +42,6 @@ class ContactService
 
         $this->contactRepository->save($contact);
         return new JsonResponse(['message' => 'Contact saved successfully'], Response::HTTP_OK);
-    }
-
-    public function delete(Contact $contact): JsonResponse
-    {
-        $this->contactRepository->delete($contact);
-        return new JsonResponse(['message' => 'Contact deleted successfully'], Response::HTTP_NO_CONTENT);
     }
 
     public function getById(int $id): ?Contact

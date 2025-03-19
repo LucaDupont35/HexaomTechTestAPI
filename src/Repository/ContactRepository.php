@@ -5,10 +5,11 @@ namespace App\Repository;
 use App\Entity\Contact;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Psr\Log\LoggerInterface;
 
 class ContactRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, )
     {
         parent::__construct($registry, Contact::class);
     }
@@ -16,14 +17,6 @@ class ContactRepository extends ServiceEntityRepository
     public function save(Contact $contact, bool $flush = true): void
     {
         $this->getEntityManager()->persist($contact);
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-    public function delete(Contact $contact, bool $flush = true): void
-    {
-        $this->getEntityManager()->remove($contact);
         if ($flush) {
             $this->getEntityManager()->flush();
         }
